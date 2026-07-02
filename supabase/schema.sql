@@ -20,9 +20,9 @@ CREATE TABLE IF NOT EXISTS incidents (
   false_positive BOOLEAN DEFAULT FALSE
 );
 
-CREATE INDEX idx_incidents_zone ON incidents(zone_id);
-CREATE INDEX idx_incidents_status ON incidents(status);
-CREATE INDEX idx_incidents_timestamp ON incidents(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_incidents_zone ON incidents(zone_id);
+CREATE INDEX IF NOT EXISTS idx_incidents_status ON incidents(status);
+CREATE INDEX IF NOT EXISTS idx_incidents_timestamp ON incidents(timestamp DESC);
 
 -- Device profiles
 CREATE TABLE IF NOT EXISTS device_profiles (
@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS device_profiles (
   enrolled_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_devices_zone ON device_profiles(zone_id);
-CREATE INDEX idx_devices_status ON device_profiles(status);
+CREATE INDEX IF NOT EXISTS idx_devices_zone ON device_profiles(zone_id);
+CREATE INDEX IF NOT EXISTS idx_devices_status ON device_profiles(status);
 
 -- Zones
 CREATE TABLE IF NOT EXISTS zones (
@@ -84,15 +84,18 @@ ALTER TABLE device_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE zones ENABLE ROW LEVEL SECURITY;
 
 -- Public read-only access (safe for dashboard)
+DROP POLICY IF EXISTS read_incidents ON incidents;
 CREATE POLICY read_incidents ON incidents FOR SELECT USING (true);
+DROP POLICY IF EXISTS read_devices ON device_profiles;
 CREATE POLICY read_devices ON device_profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS read_zones ON zones;
 CREATE POLICY read_zones ON zones FOR SELECT USING (true);
 
 -- Create API views for the dashboard
-CREATE VIEW active_alerts AS
-  SELECT * FROM incidents WHERE status = 'CONTAINED' ORDER BY timestamp DESC LIMIT 10;
+CREATE OR REPLACE VIEW active_alerts AS
+  SELECT * FROM incidents ORDER BY timestamp DESC LIMIT 10;
 
-CREATE VIEW zone_summary AS
+CREATE OR REPLACE VIEW zone_summary AS
   SELECT
     zone_id,
     COUNT(*) as total_devices,
