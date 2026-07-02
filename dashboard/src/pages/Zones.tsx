@@ -62,7 +62,7 @@ const Zones: React.FC = () => {
                   background: severityBg[z.severity], borderRadius: '6px', padding: '10px 14px',
                   fontSize: '12px', color: severityColors[z.severity], fontWeight: 600,
                 }}>
-                  {z.active_alerts} active alerts · {z.lastEvent}
+                  {z.alerts} active alerts · {z.lastEvent}
                 </div>
               )}
               {z.alerts === 0 && (

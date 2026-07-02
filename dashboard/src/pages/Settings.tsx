@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ConfigSection {
-  title: string; fields: { label: string; key: string; value: string; type: string; desc: string }[];
+  title: string; fields: { label: string; key: string; type: string; desc: string }[];
 }
 
 const Settings: React.FC = () => {
