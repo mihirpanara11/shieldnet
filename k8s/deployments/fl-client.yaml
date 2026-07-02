@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-fl-client
+  namespace: shieldnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-fl-client
+  template:
+    metadata:
+      labels:
+        app: sn-fl-client
+    spec:
+      containers:
+      - name: fl-client
+        image: shieldnet/fl-client:latest
+        ports:
+        - containerPort: 8004
+        env:
+        - name: FL_SERVER
+          value: "fl-server:9080"
+        - name: ZONE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: ZONE_ID
+        - name: FL_INTERVAL_MINUTES
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: FL_INTERVAL_MINUTES
+        volumeMounts:
+        - name: models
+          mountPath: /models
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: models-pvc

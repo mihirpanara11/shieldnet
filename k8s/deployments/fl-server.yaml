@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-fl-server
+  namespace: shieldnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-fl-server
+  template:
+    metadata:
+      labels:
+        app: sn-fl-server
+    spec:
+      containers:
+      - name: fl-server
+        image: shieldnet/fl-server:latest
+        ports:
+        - containerPort: 9080
+        env:
+        - name: MIN_CLIENTS
+          value: "3"
+        - name: DP_EPSILON
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: DP_EPSILON
+        - name: DP_DELTA
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: DP_DELTA
+        - name: DP_CLIP_NORM
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: DP_CLIP_NORM
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sn-inference
+  namespace: shieldnet
+spec:
+  selector:
+    app: sn-inference
+  ports:
+  - port: 8001
+    targetPort: 8001
+    name: grpc
+  type: ClusterIP

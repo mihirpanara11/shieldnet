@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-inference
+  namespace: shieldnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-inference
+  template:
+    metadata:
+      labels:
+        app: sn-inference
+    spec:
+      containers:
+      - name: inference
+        image: shieldnet/inference-engine:latest
+        ports:
+        - containerPort: 8001
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka:9092"
+        - name: ZONE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: ZONE_ID
+        - name: MODEL_PATH
+          value: "/models"
+        volumeMounts:
+        - name: models
+          mountPath: /models
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: models-pvc

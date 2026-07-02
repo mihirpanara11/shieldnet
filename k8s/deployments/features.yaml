@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-features
+  namespace: shieldnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-features
+  template:
+    metadata:
+      labels:
+        app: sn-features
+    spec:
+      containers:
+      - name: features
+        image: shieldnet/feature-extractor:latest
+        ports:
+        - containerPort: 8002
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka:9092"
+        - name: ZONE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: ZONE_ID

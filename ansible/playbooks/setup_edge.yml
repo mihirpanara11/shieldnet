@@ -1,0 +1,7 @@
+---
+- name: Setup ShieldNet Edge Gateway Node
+  hosts: edge_nodes
+  become: yes
+  roles:
+    - docker
+    - shieldnet

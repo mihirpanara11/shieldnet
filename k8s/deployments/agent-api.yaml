@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-agent
+  namespace: shieldnet
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sn-agent
+  template:
+    metadata:
+      labels:
+        app: sn-agent
+    spec:
+      containers:
+      - name: agent-api
+        image: shieldnet/agent-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ZONE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: ZONE_ID
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shieldnet-secrets
+              key: JWT_SECRET
+        - name: INFLUX_URL
+          value: "http://influxdb:8086"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

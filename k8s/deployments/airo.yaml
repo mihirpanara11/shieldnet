@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sn-airo
+  namespace: shieldnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sn-airo
+  template:
+    metadata:
+      labels:
+        app: sn-airo
+    spec:
+      containers:
+      - name: airo
+        image: shieldnet/airo:latest
+        ports:
+        - containerPort: 8003
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka:9092"
+        - name: MQTT_BROKER
+          value: "mosquitto:1883"
+        - name: ZONE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: shieldnet-config
+              key: ZONE_ID

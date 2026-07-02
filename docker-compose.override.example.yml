@@ -1,0 +1,54 @@
+# ShieldNet Local Development Override
+# Copy to docker-compose.override.yml to:
+#   - Mount source code for hot-reload
+#   - Expose additional debug ports
+#   - Use local images instead of pulling
+
+version: "3.9"
+
+services:
+  sn-features:
+    build:
+      context: ./features
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./features:/app
+    ports:
+      - "5678:5678"   # debugpy
+
+  sn-inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./inference:/app
+    ports:
+      - "5679:5678"
+
+  sn-airo:
+    build:
+      context: ./airo
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./airo:/app
+
+  sn-agent:
+    build:
+      context: ./agent_api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./agent_api:/app
+    ports:
+      - "5677:5678"
+
+  mosquitto:
+    ports:
+      - "9001:9001"   # WebSocket MQTT
+
+  kafka:
+    ports:
+      - "9094:9094"   # External PLAINTEXT
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT

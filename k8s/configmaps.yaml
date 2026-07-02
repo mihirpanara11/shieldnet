@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shieldnet-config
+  namespace: shieldnet
+data:
+  ZONE_ID: "ZONE-04"
+  INFERENCE_THRESHOLD_LOW: "0.40"
+  INFERENCE_THRESHOLD_HIGH: "0.70"
+  FL_INTERVAL_MINUTES: "60"
+  FL_LOCAL_EPOCHS: "3"
+  DP_EPSILON: "1.0"
+  DP_DELTA: "1e-5"
+  DP_CLIP_NORM: "1.0"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+  namespace: shieldnet
+data:
+  mosquitto.conf: |
+    listener 1883 localhost
+    listener 8883
+    protocol mqtt
+    allow_anonymous false
+    max_connections 2000

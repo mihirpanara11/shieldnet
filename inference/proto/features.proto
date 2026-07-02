@@ -1,0 +1,32 @@
+syntax = "proto3";
+package shieldnet.features;
+
+message RawMessage {
+  string device_id       = 1;
+  string zone_id         = 2;
+  string timestamp       = 3;
+  string protocol        = 4;
+  string topic           = 5;
+  bytes  payload         = 6;
+  int32  payload_size    = 7;
+  int32  qos             = 8;
+  bool   retain          = 9;
+  string source_ip       = 10;
+  string dest_ip         = 11;
+  int32  dest_port       = 12;
+  string device_category = 13;
+}
+
+message FeatureVector {
+  string device_id          = 1;
+  string zone_id            = 2;
+  string timestamp          = 3;
+  string device_category    = 4;
+  repeated float features   = 5;
+  string protocol           = 6;
+}
+
+service FeatureService {
+  rpc ExtractFeatures (RawMessage)       returns (FeatureVector);
+  rpc ExtractBatch    (stream RawMessage) returns (stream FeatureVector);
+}

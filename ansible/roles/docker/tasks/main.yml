@@ -1,0 +1,19 @@
+---
+- name: Install Docker Engine
+  shell: |
+    curl -fsSL https://get.docker.com | sh
+    usermod -aG docker {{ ansible_user }}
+  args:
+    creates: /usr/bin/docker
+
+- name: Install Docker Compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-aarch64"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+
+- name: Start Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sn-airo
+  namespace: shieldnet
+spec:
+  selector:
+    app: sn-airo
+  ports:
+  - port: 8003
+    targetPort: 8003
+    name: grpc
+  type: ClusterIP

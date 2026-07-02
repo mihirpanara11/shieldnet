@@ -1,0 +1,54 @@
+syntax = "proto3";
+package shieldnet.inference;
+
+message FeatureVector {
+  string  device_id          = 1;
+  string  zone_id            = 2;
+  string  timestamp          = 3;
+  string  device_category    = 4;
+  repeated float features    = 5;
+  string  protocol           = 6;
+}
+
+message InferenceResult {
+  string  device_id          = 1;
+  string  zone_id            = 2;
+  string  timestamp          = 3;
+  float   score_lstm         = 4;
+  float   score_if           = 5;
+  float   score_ae           = 6;
+  float   score_ensemble     = 7;
+  string  decision           = 8;
+  string  threat_class       = 9;
+  float   threat_confidence  = 10;
+  string  model_version      = 11;
+  int64   inference_time_ms  = 12;
+}
+
+message BatchInferRequest {
+  repeated FeatureVector vectors = 1;
+}
+
+message BatchInferResponse {
+  repeated InferenceResult results = 1;
+}
+
+message ModelInfoRequest {}
+
+message ModelInfoResponse {
+  string  lstm_version           = 1;
+  string  ae_version             = 2;
+  string  classifier_version     = 3;
+  string  global_version         = 4;
+  string  last_fl_update         = 5;
+  float   threshold_low          = 6;
+  float   threshold_high         = 7;
+  float   auc_roc_latest         = 8;
+}
+
+service InferenceService {
+  rpc Infer           (FeatureVector)    returns (InferenceResult);
+  rpc BatchInfer      (BatchInferRequest) returns (BatchInferResponse);
+  rpc GetModelInfo    (ModelInfoRequest) returns (ModelInfoResponse);
+  rpc HealthCheck     (ModelInfoRequest) returns (ModelInfoResponse);
+}

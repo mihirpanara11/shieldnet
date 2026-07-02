@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+*.egg
+.venv/
+venv/
+
+# Environment
+.env
+!ansible/.env.j2
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / Dashboard
+dashboard/node_modules/
+dashboard/dist/
+
+# Model files
+*.h5
+*.pkl
+*.model
+*.bin
+models/
+
+# Docker
+docker-compose.override.yml
+
+# Data
+data/
+*.parquet
+*.csv
+*.zip
+
+# Logs
+logs/
+*.log
+
+# K8s
+k8s/*.secret.yaml
+
+# Coverage
+htmlcov/
+.coverage
+coverage/

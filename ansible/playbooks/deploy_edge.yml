@@ -1,0 +1,6 @@
+---
+- name: Deploy ShieldNet to Edge Nodes
+  hosts: edge_nodes
+  become: yes
+  roles:
+    - shieldnet
