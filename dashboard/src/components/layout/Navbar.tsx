@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+const notifications = [
+  { id: 1, text: 'DDoS detected in ZONE-04', time: '2m ago', severity: 'high' },
+  { id: 2, text: 'Botnet beacon in ZONE-02', time: '15m ago', severity: 'medium' },
+  { id: 3, text: 'Device CAM-0007 degraded', time: '1h ago', severity: 'low' },
+];
 
 const Navbar: React.FC = () => {
+  const [showNotif, setShowNotif] = useState(false);
+
   return (
     <nav style={{
       background: '#004D40',
@@ -38,14 +46,46 @@ const Navbar: React.FC = () => {
           <option>ZONE-02</option>
           <option>ZONE-03</option>
         </select>
-        <span style={{ position: 'relative', cursor: 'pointer' }}>
-          <span style={{ fontSize: '20px' }}>🔔</span>
-          <span style={{
-            position: 'absolute', top: '-4px', right: '-6px',
-            background: '#C62828', color: 'white', fontSize: '10px',
-            borderRadius: '50%', padding: '1px 5px', fontWeight: 700,
-          }}>3</span>
-        </span>
+        <div style={{ position: 'relative' }}>
+          <span
+            style={{ position: 'relative', cursor: 'pointer', fontSize: '20px' }}
+            onClick={() => setShowNotif(!showNotif)}
+          >
+            🔔
+            <span style={{
+              position: 'absolute', top: '-4px', right: '-10px',
+              background: '#C62828', color: 'white', fontSize: '10px',
+              borderRadius: '50%', padding: '1px 5px', fontWeight: 700,
+            }}>{notifications.length}</span>
+          </span>
+          {showNotif && (
+            <div style={{
+              position: 'absolute', right: 0, top: '32px', width: '300px',
+              background: 'white', color: '#333', borderRadius: '6px',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.2)', zIndex: 1000,
+              fontFamily: 'Calibri, sans-serif',
+            }}>
+              <div style={{ padding: '10px 14px', borderBottom: '1px solid #eee', fontWeight: 700, fontSize: '13px' }}>
+                Notifications
+              </div>
+              {notifications.map(n => (
+                <div key={n.id} style={{
+                  padding: '10px 14px', borderBottom: '1px solid #f5f5f5',
+                  display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px',
+                }}>
+                  <span style={{
+                    width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
+                    background: n.severity === 'high' ? '#C62828' : n.severity === 'medium' ? '#E65100' : '#FF8F00',
+                  }} />
+                  <div style={{ flex: 1 }}>
+                    <div>{n.text}</div>
+                    <div style={{ fontSize: '11px', color: '#999' }}>{n.time}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <span style={{ cursor: 'pointer', fontSize: '13px' }}>Operator</span>
       </div>
     </nav>
