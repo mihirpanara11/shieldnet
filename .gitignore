@@ -31,6 +31,7 @@ dashboard/dist/
 *.model
 *.bin
 models/
+!inference/models/
 
 # Docker
 docker-compose.override.yml
